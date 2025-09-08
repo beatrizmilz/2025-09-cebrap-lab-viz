@@ -17,7 +17,8 @@ install.packages(c(
   "geobr",
   "abjData",
   "janitor",
-  "parzer"
+  "parzer",
+  "esquisse"
 ))
 
 # Carregar pacote: (precisamos fazer isso toda vez que iniciamos o R)
