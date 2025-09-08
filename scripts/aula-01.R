@@ -8,11 +8,20 @@
 
 
 # Instalar pacote: (lembrando que apenas precisamos fazer isso uma vez)
-# install.packages("tidyverse")
+
+install.packages(c(
+  "tidyverse",
+  "patchwork",
+  "ggthemes",
+  "sf",
+  "geobr",
+  "abjData"
+))
 
 # Carregar pacote: (precisamos fazer isso toda vez que iniciamos o R)
 # Dica: colocar no início do script
 library(tidyverse)
+
 
 # IMPORTAÇÃO -------------------------------------------------------------------
 # Importar os dados que iremos usar
@@ -38,6 +47,8 @@ glimpse(dados_pnud)
 # $ lat       <dbl> -11.929, -9.913, -13.492, -11.438, -13.189, -13.117…
 # $ lon       <dbl> -61.996, -63.041, -60.545, -61.448, -60.812, -60.54…
 
+
+# Filtrar linhas com o ano igual à 2010
 dados_pnud_2010 <- dados_pnud |>
   filter(ano == 2010)
 
@@ -175,7 +186,8 @@ dados_pnud_2010 |>
 # Primeiro vamos preparar a base de dados para colocar no gráfico
 media_idhm_por_regiao <- dados_pnud_2010 |>
   group_by(regiao_nm, uf_sigla) |>
-  summarise(media_idhm = mean(idhm))
+  summarise(media_idhm = mean(idhm)) |>
+  ungroup()
 
 # Podemos criar o gráfico de barras usando o geom_col
 
@@ -212,7 +224,7 @@ media_idhm_por_regiao |>
 # Primeiro vamos preparar a base de dados para colocar no gráfico
 
 dados_idhm_ano_regiao <- dados_pnud |>
-  dplyr::group_by(ano, regiao_nm) |>
+  group_by(ano, regiao_nm) |>
   summarise(media_idhm = mean(idhm))
 
 
