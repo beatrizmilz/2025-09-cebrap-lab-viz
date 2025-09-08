@@ -47,6 +47,9 @@ list_geobr() |> View()
 
 brasil <- read_country()
 
+glimpse(brasil)
+
+
 brasil |> 
   ggplot() + 
   geom_sf()
@@ -55,9 +58,11 @@ brasil |>
 
 estados <- read_state()
 
+glimpse(estados)
+
 estados |> 
   ggplot() +
-  geom_sf()
+  geom_sf(aes(fill = name_region))
 
 
 mg <- read_state("MG")
@@ -65,7 +70,6 @@ mg <- read_state("MG")
 mg |> 
   ggplot() +
   geom_sf()
-
 
 # geobr::read_state("DF") # importa a delimitação de um Estado específico,
 #  usando a sigla
@@ -76,7 +80,13 @@ mg |>
 # geobr::read_municipality(code_muni = 3550308) # importa a delimitação
 # de um município específico, usando o código do IBGE do município.
 
-osasco <- geobr::read_municipality(code_muni = 	3534401)
+
+muni_sp <- read_municipality("SP")
+
+glimpse(muni_sp)
+
+
+osasco <- read_municipality(code_muni = 3534401)
 sp <- read_state("SP")
 
 osasco |> 
@@ -87,8 +97,9 @@ osasco |>
 # Podemos usar esses diferentes objetos como camadas do gráfico ----
 
 ggplot() +
- geom_sf(data = estados, color = "gray") +
+# geom_sf(data = estados, color = "gray") +
   geom_sf(data = sp, color = "blue") +
+  geom_sf(data = muni_sp) + 
   geom_sf(data = osasco, color = "red", fill = "red")
 
 
@@ -194,28 +205,30 @@ pnud_uf_sf %>%
 
 
 
-## Exemplo 2: Escolas em Brasília, DF
+## Exemplo 2: Escolas em Brasília, DF -----
 
 ### Carregar os dados usados
 
 # a) Escolas em Brasília
 
-escolas_brasilia <- readr::read_rds("dados/geobr/escolas_brasilia.Rds")
+# escolas_brasilia <- readr::read_rds("dados/geobr/escolas_brasilia.Rds")
 
 # Como obter essa mesma base?
-# escolas <- geobr::read_schools()
-# escolas_brasilia <- escolas %>%
-#   filter(abbrev_state == "DF", name_muni == "Brasília")
+escolas <- read_schools()
 
+escolas_brasilia <- escolas |> 
+  filter(abbrev_state == "DF", name_muni == "Brasília")
+
+glimpse(escolas_brasilia)
 
 
 # b) Delimitação de Brasília
 
 
-municipio_brasilia <- readr::read_rds("dados/geobr/municipio_brasilia.Rds")
+# municipio_brasilia <- readr::read_rds("dados/geobr/municipio_brasilia.Rds")
 
 # Como obter essa mesma base?
-# municipio_brasilia <- geobr::read_municipality(5300108)
+municipio_brasilia <- read_municipality(5300108)
 
 
 
@@ -363,7 +376,7 @@ dados_pnud_2010 <- dados_pnud |>
 # pontos - com lat/lon da base
 dados_pnud_2010 |> 
   # cria a coluna geom baseado nas colunas lat/lon
-  st_as_sf(coords = c("lon", "lat")) |> 
+  st_as_sf(coords = c("lon", "lat"), crs = "EPSG:4674") |> 
   ggplot() +
   geom_sf(aes(color = espvida), alpha = 0.3)
 # Como abrir arquivos externos, como shapefiles ou geopackages? ----
