@@ -394,7 +394,6 @@ exemplo_grafico_3 <- media_idhm_por_uf |>
     legend.position = "bottom"
   )
 
-# Função ggsave()
 # Função ggsave() --------
 
 # mais simples
