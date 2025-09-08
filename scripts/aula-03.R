@@ -114,20 +114,20 @@ ggplot() +
 
 # a) Todos os estados do Brasil
 
-estados <- readr::read_rds("dados/geobr/estados.Rds")
+# estados <- readr::read_rds("dados/geobr/estados.Rds")
 
 # Como obter essa mesma base?
-# estados <- geobr::read_state()
+estados <- geobr::read_state()
 
 
 
 # b) Apenas um estado: DF
 
 
-estado_df <- readr::read_rds("dados/geobr/estado_df.Rds")
+# estado_df <- readr::read_rds("dados/geobr/estado_df.Rds")
 
 # Como obter essa mesma base?
-# estado_df <- geobr::read_state("DF")
+estado_df <- geobr::read_state("DF")
 
 
 
@@ -140,7 +140,7 @@ class(estados)
 
 # Usamos o pacote ggplot2 para criar os mapas, utilizando o geom_sf()
 
-estados %>%
+estados |>
   ggplot() +
   geom_sf()
 
@@ -168,8 +168,8 @@ glimpse(estados)
 # - filter() - conseguimos filtrar os objetos
 
 
-estados %>%
-  filter(name_region == "Nordeste") %>%
+estados |>
+  filter(name_region == "Nordeste") |>
   ggplot() +
   geom_sf()
 
@@ -185,7 +185,7 @@ class(abjData::pnud_uf)
 
 
 
-pnud_uf_sf <- estados %>%
+pnud_uf_sf <- estados |>
   left_join(abjData::pnud_uf, by = c("code_state" = "uf"))
 
 class(pnud_uf_sf)
@@ -197,7 +197,7 @@ class(pnud_uf_sf)
 
 # glimpse(pnud_uf_sf)
 
-pnud_uf_sf %>%
+pnud_uf_sf |>
   filter(ano == 2010) |> 
   ggplot(aes(fill = idhm)) +
   geom_sf() +
@@ -270,7 +270,7 @@ ggplot() +
   geom_sf(data = escolas_brasilia, aes(color = government_level), show.legend = FALSE) +
   facet_wrap(~government_level) +
   theme_void() +
-  labs(title = "Escolas em Brasília \n") +
+  labs(title = "Escolas em Brasília") +
   theme(plot.title = element_text(hjust = 0.5))
 
 
@@ -312,13 +312,13 @@ library(magrittr)
 #     "../dados/shp_rod/rodovias.shp",
 #     quiet = TRUE#,
 #     #options = "ENCODING=WINDOWS-1252"
-#   ) %>%
+#   ) |>
 #   # limpar o nome das colunas
 #   janitor::clean_names()
 
 # filtrar para DF
 
-# rodovias_df <- rodovias %>%
+# rodovias_df <- rodovias |>
 #   filter(sg_uf == "DF")
 
 
@@ -379,21 +379,12 @@ dados_pnud_2010 |>
   st_as_sf(coords = c("lon", "lat"), crs = "EPSG:4674") |> 
   ggplot() +
   geom_sf(aes(color = espvida), alpha = 0.3)
+
+
 # Como abrir arquivos externos, como shapefiles ou geopackages? ----
 
 # ler shapefile, ou geopackage
 # sf::read_sf("arquivo.shp")
 # escrever um geopackage
 # sf::write_sf("nome_arquivo.gpkg")
-
-
-# Abrindo shape
-# https://transparencia.metrosp.com.br/dataset/pesquisa-origem-e-destino
-od97 <- sf::read_sf(
-"~/Downloads/Pesquisa Origem Destino 1977/Mapas/Shape/Zonas1977_region.shp"
-)
-
-od97 |> 
-  ggplot() +
-  geom_sf()
 
