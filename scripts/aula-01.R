@@ -15,7 +15,9 @@ install.packages(c(
   "ggthemes",
   "sf",
   "geobr",
-  "abjData"
+  "abjData",
+  "janitor",
+  "parzer"
 ))
 
 # Carregar pacote: (precisamos fazer isso toda vez que iniciamos o R)
