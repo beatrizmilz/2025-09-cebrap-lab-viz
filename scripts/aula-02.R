@@ -75,8 +75,7 @@ exemplo_grafico +
     title = "Média do IDHm por UF em 2010",
     subtitle = "Cores representam a região",
     caption = "Fonte: Dados do PNUD referentes ao Censo.
-  Dados extraídos usando o pacote abjData, 
-  criado pela Associação Brasileira de Jurimetria."
+  Dados extraídos usando o pacote abjData."
   )
 
 
@@ -104,6 +103,9 @@ exemplo_grafico +
 
 exemplo_grafico +
   theme_minimal()
+
+exemplo_grafico +
+  theme_classic()
 
 exemplo_grafico + 
   theme_void()
@@ -273,6 +275,22 @@ exemplo_grafico +
 exemplo_grafico +
   scale_fill_viridis_d()
 
+exemplo_grafico + 
+  scale_fill_brewer(type = "qual")
+
+exemplo_grafico + 
+  scale_fill_brewer(type = "div")
+
+exemplo_grafico + 
+  scale_fill_brewer(type = "seq")
+
+# type	
+# One of "seq" (sequential), "div" (diverging) or "qual" (qualitative)
+
+exemplo_grafico +
+  scale_fill_brewer(palette = "Set2") 
+
+
 exemplo_grafico +
   scale_fill_brewer(palette = "Set2")
 
@@ -305,8 +323,8 @@ exemplo_grafico +
 # Outro exemplo de escala manual
 
 media_idhm_por_uf_ordenado |>
-  dplyr::mutate(
-    cores = dplyr::case_when(
+  mutate(
+    cores = case_when(
       media_idhm < 0.6 ~ "#b03636",
       media_idhm >= 0.6 & media_idhm < 0.8 ~ "#FFFF00",
       media_idhm >= 0.8 ~ "#048304"
@@ -324,7 +342,10 @@ media_idhm_por_uf_ordenado |>
 # Escala dos eixos
 exemplo_grafico +
   scale_x_continuous(limits = c(0, 1),
-                     breaks = seq(0, 1, 0.20))
+                     breaks = seq(0, 1, 0.10))
+
+# seq(valor_inicial, valor_final, valor_pulo)
+seq(0, 100, 5)
 
 # Escala de datas
 
@@ -374,17 +395,23 @@ exemplo_grafico_3 <- media_idhm_por_uf |>
   )
 
 # Função ggsave()
+# Função ggsave() --------
+
+# mais simples
+ggsave("grafico.png", exemplo_grafico_3)
 
 ggsave(
   filename = "output/exemplo_grafico_exportar.png",
   plot = exemplo_grafico_3,
-  width = 10,
-  height = 6,
-  units = "in",
-  dpi = 600
+  width = 10, # largura
+  height = 10, # altura
+  units = "in", # unidade de medida
+  dpi = 600 # dots per inch, 
+  # quanto maior o dpi, maior a qualidade e resolução
+  # e tamanho do arquivo
 )
 
-
+library(svglite)
 ggsave(
   filename = "output/exemplo_grafico_exportar.svg",
   plot = exemplo_grafico_3,
@@ -418,10 +445,10 @@ exemplo_grafico_4 <- dados_pnud_2010 |>
     title = "População por UF",
     subtitle = "Ano de 2010",
     caption = "Fonte: PNUD, dados disponíveis no pacote abjData.",
-    fill = "População (em milhões)"
+    fill = "População\n(em milhões)"
   ) +
   theme(
-    legend.position = "bottom"
+    legend.position = "right"
   )
 
 # Combinar gráficos em uma única figura ---------
@@ -433,9 +460,12 @@ exemplo_grafico_3 + exemplo_grafico_4
 
 # Ou podemos usar as funções auxiliares para organizar melhor a figura
 grafico_unido <- exemplo_grafico_3 + exemplo_grafico_4  +
-  plot_annotation(tag_levels = 'A') +
-  plot_layout(nrow = 2)
+  plot_annotation(tag_levels = '1', 
+                  tag_suffix = "",
+                  tag_prefix = "Gráfico ") +
+  plot_layout(ncol = 2)
 
+grafico_unido
 
 # salvar em uma imagem
 ggsave(
@@ -446,3 +476,6 @@ ggsave(
   units = "in",
   dpi = 300
 )
+
+# alternativa ao +
+wrap_plots(exemplo_grafico_3, exemplo_grafico_4)
