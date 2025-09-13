@@ -21,9 +21,10 @@ grafico_2 <- starwars |>
   geom_col()
 
 # a função ggplot_to_ppt é do pacote esquisse. 
-# ela recebe apenas um argumento: um texto (entre aspas)
-# com o nome do objeto.
+# ela recebe apenas um argumento: um vetor (c()) com textos (entre aspas)
+# contendo os nomes dos objetos.
 # não indicamos onde o arquivo será salvo, 
 # e a função abre o powerpoint com o resultado.
+# cada gráfico ficará em um slide do powerpoint
 ggplot_to_ppt(c("grafico_1", "grafico_2"))
 
